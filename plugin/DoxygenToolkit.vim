@@ -324,8 +324,17 @@ endif
 if !exists("g:DoxygenToolkit_dateTag")
   let g:DoxygenToolkit_dateTag = "@date "
 endif
+if !exists("g:DoxygenToolkit_copyrightTag")
+    let g:DoxygenToolkit_copyrightTag = "@copyright "
+endif
 if !exists("g:DoxygenToolkit_versionTag")
   let g:DoxygenToolkit_versionTag = "@version "
+endif
+if !exists("g:DoxygenToolkit_yearString")
+  let g:DoxygenToolkit_yearString = strftime("%Y")
+endif
+if !exists("g:DoxygenToolkit_copyrightString")
+  let g:DoxygenToolkit_copyrightString = "Copyright (c) ".g:DoxygenToolkit_yearString
 endif
 if !exists("g:DoxygenToolkit_undocTag")
   let g:DoxygenToolkit_undocTag = "DOX_SKIP_BLOCK"
@@ -346,6 +355,9 @@ if !exists("g:DoxygenToolkit_startCommentTag ")
 endif
 if !exists("g:DoxygenToolkit_interCommentTag ")
   let g:DoxygenToolkit_interCommentTag = "* "
+endif
+if !exists("g:DoxygenToolkit_interNoSpaceCommentTag ")
+  let g:DoxygenToolkit_interNoSpaceCommentTag = "*"
 endif
 if !exists("g:DoxygenToolkit_interCommentBlock ")
   let g:DoxygenToolkit_interCommentBlock = "* "
@@ -489,6 +501,10 @@ function! <SID>DoxygenAuthorFunc()
   exec "normal o".s:interCommentTag.g:DoxygenToolkit_versionTag.g:DoxygenToolkit_versionString
   let l:date = strftime("%Y-%m-%d")
   exec "normal o".s:interCommentTag.g:DoxygenToolkit_dateTag.l:date
+  " Todo: define as a variable.
+  exec "normal o".s:interNoSpaceCommentTag
+  exec "normal o".s:interCommentTag.g:DoxygenToolkit_copyrightTag.g:DoxygenToolkit_copyrightString
+  exec "normal o".s:interNoSpaceCommentTag
   if ( g:DoxygenToolkit_endCommentTag != "" )
     exec "normal o".s:endCommentTag
   endif
@@ -1075,19 +1091,21 @@ endfunction
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 function! s:InitializeParameters()
   if( s:CheckFileType() == "cpp" )
-    let s:startCommentTag   = g:DoxygenToolkit_startCommentTag
-    let s:interCommentTag   = g:DoxygenToolkit_interCommentTag
-    let s:endCommentTag     = g:DoxygenToolkit_endCommentTag
-    let s:startCommentBlock = g:DoxygenToolkit_startCommentBlock
-    let s:interCommentBlock = g:DoxygenToolkit_interCommentBlock
-    let s:endCommentBlock   = g:DoxygenToolkit_endCommentBlock
+    let s:startCommentTag          = g:DoxygenToolkit_startCommentTag
+    let s:interCommentTag          = g:DoxygenToolkit_interCommentTag
+    let s:interNoSpaceCommentTag   = g:DoxygenToolkit_interNoSpaceCommentTag
+    let s:endCommentTag            = g:DoxygenToolkit_endCommentTag
+    let s:startCommentBlock        = g:DoxygenToolkit_startCommentBlock
+    let s:interCommentBlock        = g:DoxygenToolkit_interCommentBlock
+    let s:endCommentBlock          = g:DoxygenToolkit_endCommentBlock
   else
-    let s:startCommentTag   = "## "
-    let s:interCommentTag   = "# "
-    let s:endCommentTag     = ""
-    let s:startCommentBlock = "# "
-    let s:interCommentBlock = "# "
-    let s:endCommentBlock   = ""
+    let s:startCommentTag          = "## "
+    let s:interCommentTag          = "# "
+    let s:interNoSpaceCommentTag   = "# "
+    let s:endCommentTag            = ""
+    let s:startCommentBlock        = "# "
+    let s:interCommentBlock        = "# "
+    let s:endCommentBlock          = ""
   endif
 
   " Backup standard comment expension and indentation
