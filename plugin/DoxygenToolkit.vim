@@ -485,8 +485,10 @@ function! <SID>DoxygenAuthorFunc()
   endif
 
   " Test versionString variable
-  if !exists("g:DoxygenToolkit_versionString")
-    let g:DoxygenToolkit_versionString = input("Enter version string : ")
+  if( g:DoxygenToolkit_compactDoc != "yes" )
+    if !exists("g:DoxygenToolkit_versionString")
+      let g:DoxygenToolkit_versionString = input("Enter version string : ")
+    endif
   endif
 
   " Get file name
@@ -498,10 +500,11 @@ function! <SID>DoxygenAuthorFunc()
   exec "normal o".s:interCommentTag.g:DoxygenToolkit_briefTag_pre
   mark d
   exec "normal o".s:interCommentTag.g:DoxygenToolkit_authorTag.g:DoxygenToolkit_authorName
-  exec "normal o".s:interCommentTag.g:DoxygenToolkit_versionTag.g:DoxygenToolkit_versionString
-  let l:date = strftime("%Y-%m-%d")
-  exec "normal o".s:interCommentTag.g:DoxygenToolkit_dateTag.l:date
-  " Todo: define as a variable.
+  if( g:DoxygenToolkit_compactDoc != "yes" )
+    exec "normal o".s:interCommentTag.g:DoxygenToolkit_versionTag.g:DoxygenToolkit_versionString
+    let l:date = strftime("%Y-%m-%d")
+    exec "normal o".s:interCommentTag.g:DoxygenToolkit_dateTag.l:date
+  endif
   exec "normal o".s:interNoSpaceCommentTag
   exec "normal o".s:interCommentTag.g:DoxygenToolkit_copyrightTag.g:DoxygenToolkit_copyrightString
   exec "normal o".s:interNoSpaceCommentTag
